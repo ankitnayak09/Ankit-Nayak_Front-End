@@ -23,3 +23,78 @@
     -   In case we are calling a function with argument on onClick Event then we have to wrap the calling function insider another function or else it will be called whenever the component renderes where the function lies.
 -   `List.jsx:39` Uncaught TypeError: Cannot read properties of null (reading 'map')
     -   Add Optional Chaining in case whenever their is not surity that the data will be available
+
+
+## Optimized Code
+
+    import { useState, useEffect, memo } from "react";
+    import PropTypes from "prop-types";
+
+    // Single List Item
+    const WrappedSingleListItem = ({ index, isSelected, onClickHandler, text }) => {
+        return (
+            <li
+                style={{ backgroundColor: isSelected ? "green" : "red" }}
+                <!-- Calling ClickHandler inside arrow function wont let the function get called unless clicked -->
+                onClick={() => onClickHandler(index)}
+            >
+                {text}
+            </li>
+        );
+    };
+
+    WrappedSingleListItem.propTypes = {
+        index: PropTypes.number,
+        isSelected: PropTypes.bool,
+        onClickHandler: PropTypes.func.isRequired,
+        text: PropTypes.string.isRequired,
+    };
+
+    const SingleListItem = memo(WrappedSingleListItem);
+
+    // List Component
+    const WrappedListComponent = ({ items }) => {
+        <!-- Changed the order of state, and state update function -->
+        const [selectedIndex, setSelectedIndex] = useState();
+
+        useEffect(() => {
+            setSelectedIndex(null);
+        }, [items]);
+
+        const handleClick = (index) => {
+            setSelectedIndex(index);
+        };
+
+        return (
+            <ul style={{ textAlign: "left" }}>
+                {items?.map((item, index) => (
+                    <SingleListItem
+                        key={index}
+                        onClickHandler={() => handleClick(index)}
+                        text={item.text}
+                        index={index}
+                        <!-- selectedIndex === index => Returns an boolean -->
+                        isSelected={selectedIndex === index}
+                    />
+                ))}
+            </ul>
+        );
+    };
+
+    WrappedListComponent.propTypes = {
+        <!-- PropTypes.arrayOf => as this is an array of objects -->
+        items: PropTypes.arrayOf(
+            <!-- shapeOf is invalid function -->
+            PropTypes.shape({
+                text: PropTypes.string.isRequired,
+            })
+        ),
+    };
+
+    WrappedListComponent.defaultProps = {
+        items: null,
+    };
+
+    const List = memo(WrappedListComponent);
+
+    export default List;
