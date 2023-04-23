@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo } from "react";
+import { useState, useEffect, memo } from "react";
 import PropTypes from "prop-types";
 
 // Single List Item
@@ -36,7 +36,7 @@ const WrappedListComponent = ({ items }) => {
 
 	return (
 		<ul style={{ textAlign: "left" }}>
-			{items.map((item, index) => (
+			{items?.map((item, index) => (
 				<SingleListItem
 					key={index}
 					onClickHandler={() => handleClick(index)}

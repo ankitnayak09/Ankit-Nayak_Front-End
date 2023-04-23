@@ -21,3 +21,5 @@
     -   But, in the code the array items are reversed
 -   `List.jsx:34` Warning: Cannot update a component (`WrappedListComponent`) while rendering a different component (`WrappedSingleListItem`). To locate the bad setState() call inside `WrappedSingleListItem`.
     -   In case we are calling a function with argument on onClick Event then we have to wrap the calling function insider another function or else it will be called whenever the component renderes where the function lies.
+-   `List.jsx:39` Uncaught TypeError: Cannot read properties of null (reading 'map')
+    -   Add Optional Chaining in case whenever their is not surity that the data will be available
